@@ -39,6 +39,13 @@ dependencies:
   shared_preferences: ^2.2.3
   flutter_web_auth: ^0.5.0
   drop_shadow_image: ^0.9.1
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  image_path: "assets/icon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
 
 dev_dependencies:
   flutter_test:
