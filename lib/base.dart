@@ -275,8 +275,11 @@ class _MainPageState extends State<MainPage>{
               children: [
                 ElevatedButton(
                     child: Text("Account"),
-                    onPressed: () => {}
+                    onPressed: () => {
+                      _setMenuOpen(!_menuOpen)
+                    }
                 ),
+                SizedBox(width: 10),
                 ElevatedButton(
                     child: Text("Log Out"),
                     onPressed: () => {}
@@ -311,10 +314,11 @@ class _MainPageState extends State<MainPage>{
     if(!shadow){
       elementToRight = ClipRect(
         clipBehavior: Clip.hardEdge,
+
         child: AnimatedContainer(
             duration: new Duration(milliseconds: (animationDuration/2 * 1000).round()),
             curve: Curves.easeInOut,
-            width: _menuOpen ? 0 : getWidthFactor(context, 0.6),
+            width: _menuOpen ? 0 : getWidthFactor(context, 0.7),
             child: AnimatedOpacity(
               duration: new Duration(milliseconds: (animationDuration/2 * 1000).round()),
               opacity: _menuOpen ? 0 : 1,
@@ -332,7 +336,6 @@ class _MainPageState extends State<MainPage>{
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: shadow ? [
-            imageElement
             ] : [
               imageElement,
               elementToRight
@@ -352,7 +355,7 @@ class _MainPageState extends State<MainPage>{
     print(openHeight);
 
     return SafeArea(
-      top: false,
+      top: true,
       bottom: true,
       child: Stack(
         children: [
@@ -368,7 +371,13 @@ class _MainPageState extends State<MainPage>{
 
 
           ),
-          logoImage(context, false)
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              logoImage(context, false)
+            ]
+          )
+
 
 
 
@@ -378,22 +387,46 @@ class _MainPageState extends State<MainPage>{
     );
   }
 
+  Widget content(BuildContext context){
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: FractionallySizedBox(
+        heightFactor: 1.0,
+        widthFactor: 1.0,
+        child: Container(
+            color: Colors.white,
+            child:
+            Padding(
+              padding: EdgeInsets.only(top: 200),
+              child: Column(
+                  children: [
+                    ElevatedButton(
+                      child: Text("Change Open"),
+                      onPressed: () => {
+                        _setMenuOpen(!_menuOpen)
+                      },
+                    ),
+                    Text(
+                        _menuOpen.toString()
+                    )
+                  ]
+              )
+            )
+        ),
+      )
+    );
+  }
 
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      body: Column(
+      backgroundColor: primaryColor,
+      body: Stack(
         children: [
-          header(context),
-          ElevatedButton(
-            child: Text("Change Open"),
-            onPressed: () => {
-              _setMenuOpen(!_menuOpen)
-            },
-          ),
-          Text(
-            _menuOpen.toString()
-          )
+          content(context),
+          header(context)
+
         ]
       )
     );
@@ -455,6 +488,7 @@ class _PepBandLandingState extends State<PepBandLanding>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
+
       body: _eventList(BuildContext)
     );
   }

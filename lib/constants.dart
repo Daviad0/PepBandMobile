@@ -28,13 +28,13 @@ const BoxDecoration headerBoxStyle = BoxDecoration(
 
 const TextStyle largeText = TextStyle(
   color: lightColor,
-  fontSize: 36,
+  fontSize: 32,
   fontWeight: FontWeight.bold
 
 );
 const TextStyle mediumText = TextStyle(
     color: lightColor,
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: FontWeight.bold
 );
 
