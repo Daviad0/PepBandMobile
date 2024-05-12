@@ -14,6 +14,14 @@ const BoxShadow shadow = BoxShadow(
   spreadRadius: 5
 );
 
+const ButtonStyle headerOption = ButtonStyle(
+  backgroundColor: MaterialStatePropertyAll(lightColor),
+  alignment: Alignment.center,
+  padding: MaterialStatePropertyAll(buttonPadding),
+  minimumSize: MaterialStatePropertyAll(Size(300, 0))
+
+);
+
 const BoxDecoration headerStyle = BoxDecoration(
   color: primaryColor,
   boxShadow: [shadow],
@@ -40,6 +48,7 @@ const TextStyle mediumText = TextStyle(
 
 // padding sizes
 const EdgeInsets padding = EdgeInsets.all(20);
+const EdgeInsets buttonPadding = EdgeInsets.all(10);
 
 
 const BorderRadius radius = BorderRadius.all(Radius.circular(8));

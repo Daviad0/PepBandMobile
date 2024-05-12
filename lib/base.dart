@@ -9,6 +9,7 @@ import 'api.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'constants.dart';
 import 'helpers.dart';
+import 'pages.dart';
 
 class PepBandApp extends StatelessWidget{
 
@@ -18,12 +19,14 @@ class PepBandApp extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+
+    initializePageStorage();
+
     return MaterialApp(
       color: primaryColor,
       home: const PepBandLanding(),
       routes: <String, WidgetBuilder>{
-        "/landing": (BuildContext context) => const MainPage(),
+        "/landing": (BuildContext context) => MainPage(),
         "/login": (BuildContext context) => const PepBandLogin(),
       },
       initialRoute: "/landing",
@@ -223,7 +226,15 @@ class _PepBandLoginState extends State<PepBandLogin>{
 
 class MainPage extends StatefulWidget{
 
-  const MainPage({super.key});
+  MainPage({super.key}){
+    _initializeMain();
+  }
+
+  void _initializeMain(){
+    var homePage = pages()["Home"];
+
+    setPage(homePage as PageData);
+  }
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -231,6 +242,8 @@ class MainPage extends StatefulWidget{
 
 class _MainPageState extends State<MainPage>{
   bool _menuOpen = false;
+
+
 
   // there's a max header height
   double _validateHeaderHeight(double height){
@@ -247,6 +260,17 @@ class _MainPageState extends State<MainPage>{
   _setMenuOpen(bool open){
     setState(() {
       _menuOpen = open;
+    });
+  }
+
+  _switchPage(String pageIdentifier){
+    var allPages = pages();
+    var pageToSwitch = allPages[pageIdentifier];
+
+    setPage(pageToSwitch as PageData);
+
+    setState(() {
+      _menuOpen = true;
     });
   }
 
@@ -295,19 +319,16 @@ class _MainPageState extends State<MainPage>{
 
   Widget logoImage(BuildContext context, bool shadow){
 
-    Widget imageElement = Image(
-        image: AssetImage("assets/pep.png"),
-        height: getHeightFactor(context, 0.15)
+    Widget imageElement = GestureDetector(
+      onTap: () {
+        _setMenuOpen(!_menuOpen);
+      },
+      child: Image(
+          image: AssetImage("assets/pep.png"),
+          height: getHeightFactor(context, 0.15)
+      )
     );
 
-    if(shadow){
-      imageElement = DropShadowImage(
-        image: imageElement as Image,
-        borderRadius: 4,
-        blurRadius: 8,
-        offset: Offset.zero,
-      );
-    }
 
     Widget elementToRight = Container();
 
@@ -344,7 +365,34 @@ class _MainPageState extends State<MainPage>{
     );
   }
 
+  Widget headerOptions(BuildContext context){
 
+    List<Widget> menuOptions = [];
+
+    var allPages = pages();
+    allPages.forEach((key, value) {
+      menuOptions.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+              style: headerOption,
+              child: Text(value.pageTitle),
+              onPressed: () => {
+                _switchPage(key)
+              },
+            )
+          ],
+        ),
+      );
+    });
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: menuOptions
+    );
+  }
 
   Widget header(BuildContext context){
 
@@ -357,30 +405,98 @@ class _MainPageState extends State<MainPage>{
     return SafeArea(
       top: true,
       bottom: true,
-      child: Stack(
+      child: Column(
         children: [
-
-          logoImage(context, true),
-          AnimatedContainer(
-            decoration: headerStyle,
-            height: _menuOpen ? closedHeight : openHeight,
-            duration: new Duration(milliseconds: (animationDuration * 1000).round()),
-            curve: Curves.easeInOut
-
-
-
-
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+          Stack(
             children: [
-              logoImage(context, false)
-            ]
+
+              logoImage(context, true),
+              AnimatedContainer(
+                  decoration: headerStyle,
+                  height: _menuOpen ? closedHeight : openHeight,
+                  duration: new Duration(milliseconds: (animationDuration * 1000).round()),
+                  curve: Curves.easeInOut
+
+
+
+
+              ),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    logoImage(context, false)
+                  ]
+              ),
+              AnimatedOpacity(
+                  opacity: _menuOpen ? 1 : 0,
+                  duration: new Duration(milliseconds: (animationDuration * 100).round()),
+                  curve: Curves.easeInOut,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: Container(
+                      height: closedHeight,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [Text((getCurrentPage() as PageData).pageTitle, style: mediumText)]
+                            )
+                          ),
+                          Container(
+                            width: 100,
+                          ),
+                          Expanded(
+                              flex: 1,
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [Text("A")]
+                              )
+                          ),
+                        ],
+                      ),
+                    )
+                  )
+
+
+
+
+
+              ),
+              AnimatedContainer(
+                height: _menuOpen ? 0 : openHeight,
+                duration: new Duration(milliseconds: (animationDuration * 1000).round()),
+                curve: Curves.easeInOut,
+                child: AnimatedOpacity(
+                    opacity: _menuOpen ? 0 : 1,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                              padding: EdgeInsets.only(top: 200),
+                              child: headerOptions(context)
+                          )
+                        ]
+                    ),
+                    duration: new Duration(milliseconds: (animationDuration * 500).round())
+                ),
+
+
+
+
+              ),
+
+
+
+
+
+
+
+            ],
           )
-
-
-
-
         ],
       )
 
@@ -401,15 +517,7 @@ class _MainPageState extends State<MainPage>{
               padding: EdgeInsets.only(top: 200),
               child: Column(
                   children: [
-                    ElevatedButton(
-                      child: Text("Change Open"),
-                      onPressed: () => {
-                        _setMenuOpen(!_menuOpen)
-                      },
-                    ),
-                    Text(
-                        _menuOpen.toString()
-                    )
+                    (getCurrentPage() as PageData).mainContent
                   ]
               )
             )
@@ -420,6 +528,9 @@ class _MainPageState extends State<MainPage>{
 
   @override
   Widget build(BuildContext context){
+
+
+
     return Scaffold(
       backgroundColor: primaryColor,
       body: Stack(
