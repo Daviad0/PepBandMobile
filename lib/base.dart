@@ -339,7 +339,7 @@ class _MainPageState extends State<MainPage>{
         child: AnimatedContainer(
             duration: new Duration(milliseconds: (animationDuration/2 * 1000).round()),
             curve: Curves.easeInOut,
-            width: _menuOpen ? 0 : getWidthFactor(context, 0.7),
+            width: _menuOpen ? 0 : getWidthFactor(context, 0.65),
             child: AnimatedOpacity(
               duration: new Duration(milliseconds: (animationDuration/2 * 1000).round()),
               opacity: _menuOpen ? 0 : 1,
@@ -505,7 +505,7 @@ class _MainPageState extends State<MainPage>{
 
   Widget content(BuildContext context){
     return SafeArea(
-      top: false,
+      top: true,
       bottom: false,
       child: FractionallySizedBox(
         heightFactor: 1.0,

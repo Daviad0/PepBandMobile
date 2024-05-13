@@ -14,6 +14,13 @@ const BoxShadow shadow = BoxShadow(
   spreadRadius: 5
 );
 
+const BoxShadow headerShadow = BoxShadow(
+  color: darkTransparent,
+  blurRadius: 2,
+  spreadRadius: 2,
+  offset: Offset(0, 4)
+);
+
 const ButtonStyle headerOption = ButtonStyle(
   backgroundColor: MaterialStatePropertyAll(lightColor),
   alignment: Alignment.center,
@@ -24,7 +31,7 @@ const ButtonStyle headerOption = ButtonStyle(
 
 const BoxDecoration headerStyle = BoxDecoration(
   color: primaryColor,
-  boxShadow: [shadow],
+  boxShadow: [headerShadow],
   borderRadius: BorderRadius.only(bottomRight: circle, bottomLeft: circle)
 );
 
